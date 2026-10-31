@@ -1,6 +1,6 @@
 # Tenshi Game: Art Style Spec
 
-**Status:** DECIDED by Amelia + parent on 2026-10-31 (GDD Part 0). The prompt block in §8 is ready but **not yet checked with a test image**.
+**Status:** DECIDED by Amelia + parent on 2026-10-31 (GDD Part 0). The §8 prompt block was tested on 2026-10-31 with a **blend test** (3 blend dials x 3 game scenes, `docs/gdd/art/blend/`). Waiting for the humans to vote in the GDD (`style_blend`).
 **Decision record:** `decisions/DECISIONS.md` and `decisions/answers/2026-10-31_gdd-answers.json`
 **Owner:** humans approve, agents follow
 
@@ -59,6 +59,7 @@ Why the humans chose this: style C is easier to keep consistent, especially for 
 - Readable at sprite size. Sprites keep the same style with fewer details.
 - Child-friendly: no scary, gory or suggestive content. Demons look silly, not frightening.
 - Original characters only, with no franchise likeness (for example, avoid a red-haired mermaid with a green tail).
+- **Modest outfits:** the Mermaid wears a covered swim or crop top (shell trim is fine), never a bikini or cleavage. Statues in backgrounds are clothed. Add this to every prompt that shows her. (The 2026-10-31 blend test drew shell bikini tops; fix that in the next round.)
 
 ## 6. UI
 
@@ -91,3 +92,15 @@ palette (bubblegum pink #FF8FC0, peach #FFB27A, lemon #FFE27A, mint #9BEFC9, bab
 jelly accents (#FF4FA0, #FF8A2B, #3DB8FF, #9E6BFF). Bright, readable, low clutter, child-friendly. Original characters, no
 franchise likeness. No text, letters, logos or watermark.
 ```
+
+## 9. Blend test (2026-10-31)
+
+Same house block, plus one "blend dial" line, drawn in three game moments (story CG, exploring screen, dance battle). Script: `docs/gdd/art/generate_blend_tests.py`. Prompts: `docs/gdd/art/blend/prompts.json`. Cost: $0.40 for 9 images (1536x1024 high).
+
+| Dial | What changes |
+|---|---|
+| Blend 1 · Mostly bold cel | Flat fills, crisp shadows, shine only as small sparkles on tier-1 things |
+| Blend 2 · Even mix | The block as written: cel base plus soft light, candy shine on hair and eyes |
+| Blend 3 · Chunky with rich gloss | Softer shading, glossy toy-like hair, lots of glow and glitter |
+
+When the humans vote, fold the winning dial line into the §8 block and delete the others.

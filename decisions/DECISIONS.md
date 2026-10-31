@@ -37,9 +37,9 @@ Source: `decisions/answers/2026-10-31_gdd-answers.json`
 
 → This is written up as the style spec in `docs/ART_STYLE.md`.
 
-## ⏳ Open (24 left, to answer in the GDD)
+## ⏳ Open (25 left, to answer in the GDD)
 
-Story: `demon_fate`, `goddess_role` · Heroes: `angel_names`, `angel_outfit`, `controls` · Loop: `slice_length`, `fail_rule` · Rome: `rome_features`, `camera`, `history` · Mermaid: `mermaid_personality`, `mermaid_colour`, `mermaid_name`, `recruit_how` · Dance: `dance_feel`, `note_style`, `miss_note`, `upgrade_look`, `music_source` · Battle: `battle_style`, `enemy_look`, `fort_reclaim` · Making it: `art_pipeline`, `review_style`
+Art style: `style_blend` (new 2026-10-31: blend test, 3 mixes of A + C shown in story, explore and dance scenes) · Story: `demon_fate`, `goddess_role` · Heroes: `angel_names`, `angel_outfit`, `controls` · Loop: `slice_length`, `fail_rule` · Rome: `rome_features`, `camera`, `history` · Mermaid: `mermaid_personality`, `mermaid_colour`, `mermaid_name`, `recruit_how` · Dance: `dance_feel`, `note_style`, `miss_note`, `upgrade_look`, `music_source` · Battle: `battle_style`, `enemy_look`, `fort_reclaim` · Making it: `art_pipeline`, `review_style`
 
 ## Process feedback from the humans
 
