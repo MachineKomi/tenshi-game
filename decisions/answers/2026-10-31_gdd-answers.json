@@ -1,0 +1,105 @@
+{
+  "project": "Tenshi Game",
+  "document": "GDD v0.3 draft",
+  "exported_at": "2026-10-31T20:05:42.055Z",
+  "answered": 6,
+  "total": 30,
+  "locked": {
+    "world": "Ancient Rome",
+    "creature": "Mermaid",
+    "engine": "Godot 4",
+    "players": "2-player local co-op",
+    "ending": "Restore balance",
+    "scope": "Tiny vertical slice"
+  },
+  "decisions": [
+    {
+      "id": "art_style",
+      "section": "Art style",
+      "question": "Which finish should the whole game use?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "A_gloss",
+      "answer_labels": "A · Juicy gloss",
+      "claude_suggested": [
+        "B_handmade_gloss"
+      ],
+      "other": "this box has a max character limit which is annoying...",
+      "note": "Answer from human parent & Amelia: we really like both A and C - the juicy gloss look and the bold and chunky look - we think that the bold chunky look will be easier to nail consistently - especially getting details right in terms of VN cut scenes or CGs etc. So I think what we really want is some blending/combination/middle point between A and C here - so the bold chunky design BUT with some more smooth polished and shiny texture / gloss.",
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:02:01.486Z"
+    },
+    {
+      "id": "shine_amount",
+      "section": "Art style",
+      "question": "Where does the gel and glass shine go?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "magic_focus",
+      "answer_labels": "On magic things",
+      "claude_suggested": [
+        "magic_focus"
+      ],
+      "note": "and on anything non-magical but super important or to highlight. ",
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:02:42.856Z"
+    },
+    {
+      "id": "texture",
+      "section": "Art style",
+      "question": "How much hand-made texture?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "none",
+      "answer_labels": "None, smooth digital",
+      "claude_suggested": [
+        "light_grain"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:03:22.282Z"
+    },
+    {
+      "id": "outline",
+      "section": "Art style",
+      "question": "What kind of outlines?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": "medium_inked",
+      "answer_labels": "Medium hand-inked lines",
+      "claude_suggested": [
+        "medium_inked"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:03:35.314Z"
+    },
+    {
+      "id": "proportions",
+      "section": "Art style",
+      "question": "How chunky are the characters?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": "cute_4",
+      "answer_labels": "Cute but a bit taller",
+      "claude_suggested": [
+        "chibi_2_3"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:04:05.784Z"
+    },
+    {
+      "id": "sprite_match",
+      "section": "Art style",
+      "question": "How closely do in-game sprites match the illustrations?",
+      "who_decides": "Parent",
+      "answered": true,
+      "answer_values": "same_simplified",
+      "answer_labels": "Same style, simplified",
+      "claude_suggested": [
+        "same_simplified"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:04:48.717Z"
+    }
+  ],
+  "_note": "Trimmed copy: the 24 unanswered decisions from the export are omitted (answered:false, no notes). Full question list lives in docs/gdd/tenshi-gdd.html."
+}

@@ -1,0 +1,909 @@
+<title>Tenshi Game GDD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap">
+<style>
+/* Layout: "gel and glass" (vn-gel-glass + MSP prism). The world art sits behind everything; information is frosted glass with a thin
+   holographic film rim; anything you press or anyone named is jelly. One light visual world on purpose: single theme, every colour explicit. */
+@property --film-a{syntax:"<angle>";inherits:true;initial-value:0deg}
+:root{
+  color-scheme:light;
+  --ink:#352340; --ink-2:#4A3358; --outline:#ffffff;
+  /* jelly palette (vn-gel-glass) */
+  --pink:#FF4FA0; --tang:#FF8A2B; --lemon:#FFD62E; --mint:#2EE6A8; --sky:#3DB8FF; --violet:#9E6BFF;
+  /* prism pastels (MSP) */
+  --p1:#FF8FC0; --p2:#FFB27A; --p3:#FFE27A; --p4:#9BEFC9; --p5:#9CDEFF; --p6:#C9B4FF;
+  --ground:#f6efff; --focus:#2A6FA5; --focus-glow:rgba(185,162,255,.85);
+  --glass:linear-gradient(180deg,rgba(255,255,255,.80),rgba(255,250,253,.70));
+  --glass-thin:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,250,253,.40));
+  --film:conic-gradient(from 200deg,#ff5fae,#ffd1e8 8%,#ffb347 16%,#fff3c4 24%,#5ef0bf 33%,#e2fff4 41%,#4cc4ff 50%,#e3f4ff 58%,#a47bff 66%,#f1e8ff 75%,#ff5fae 84%,#ffe0ef 92%,#ff5fae);
+  --prism:linear-gradient(90deg,var(--p1),var(--p2),var(--p3),var(--p4),var(--p5),var(--p6),var(--p1));
+  --solid:0 .07em 0 #fff,0 -.07em 0 #fff,.07em 0 0 #fff,-.07em 0 0 #fff,.05em .05em 0 #fff,-.05em .05em 0 #fff,.05em -.05em 0 #fff,-.05em -.05em 0 #fff,.035em .065em 0 #fff,-.035em .065em 0 #fff,.035em -.065em 0 #fff,-.035em -.065em 0 #fff,.065em .035em 0 #fff,-.065em .035em 0 #fff,.065em -.035em 0 #fff,-.065em -.035em 0 #fff;
+  --spring:cubic-bezier(.3,1.6,.5,1);
+  --f-display:"Fredoka","Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-text:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%;height:auto}
+body{margin:0;background:var(--ground);color:var(--ink);font:500 16.5px/1.7 var(--f-text);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:rgba(255,255,255,.9)}
+/* the world behind the glass: blurred key art over a prism wash */
+.world{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 50% at 10% 10%,rgba(255,143,192,.45),transparent 70%),radial-gradient(50% 50% at 90% 20%,rgba(156,222,255,.55),transparent 70%),
+  radial-gradient(60% 60% at 80% 90%,rgba(201,180,255,.5),transparent 70%),radial-gradient(50% 50% at 15% 85%,rgba(155,239,201,.45),transparent 70%),var(--ground)}
+.world::after{content:"";position:absolute;inset:-40px;background:url(art/keyart.webp) center/cover;filter:blur(28px) saturate(1.2);opacity:.28}
+h1,h2,h3{font-family:var(--f-display);line-height:1.12;text-wrap:balance;margin:0;color:var(--ink);text-shadow:var(--solid)}
+h2{font-size:clamp(1.8rem,4.4vw,2.6rem);font-weight:700}
+h3{font-size:1.22rem;font-weight:600}
+p{margin:0}
+a{color:#1f5f99;text-decoration-thickness:2px;text-underline-offset:3px}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid transparent;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--focus),0 0 18px 6px var(--focus-glow)!important;border-radius:14px}
+.wrap{max-width:1080px;margin:0 auto}
+.label{font:600 .76rem/1 var(--f-display);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+
+/* ---------- materials ---------- */
+.glass{position:relative;background:var(--glass);border-radius:28px;
+  backdrop-filter:blur(14px) saturate(1.8) brightness(1.08);-webkit-backdrop-filter:blur(14px) saturate(1.8) brightness(1.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),inset 0 1px 0 1px rgba(255,255,255,.55),0 14px 34px rgba(53,35,64,.14),0 2px 6px rgba(53,35,64,.08)}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:3px;pointer-events:none;background:var(--film);filter:saturate(1.2);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.glass::after{content:"";position:absolute;left:2%;right:2%;top:4px;height:80px;max-height:30%;border-radius:24px 24px 50% 50%/24px 24px 30px 30px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.glass > *{position:relative;z-index:1}
+.jelly{--j1:#FFE1EF;--j2:#FF9BCB;--j3:#FF4FA0;--jd:rgba(170,20,90,.45);
+  position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:.4em;border:0;border-radius:99px;cursor:pointer;
+  font:700 1rem/1 var(--f-display);color:var(--ink);padding:.62em 1.2em .68em;text-shadow:var(--solid);text-decoration:none;
+  background:radial-gradient(60% 70% at 50% 118%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%),linear-gradient(180deg,var(--j1) 0%,var(--j2) 45%,var(--j3) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 -.22em .35em var(--jd),inset 0 .14em .25em rgba(255,255,255,.9),0 0 0 1px var(--jd),0 .2em .4em rgba(30,10,40,.22),0 .55em 1.1em -.3em var(--j3);
+  transition:transform .22s var(--spring),filter .15s}
+.jelly::before{content:"";position:absolute;left:.5em;right:.5em;top:.12em;height:48%;border-radius:99px 99px 60% 60%/99px 99px 40% 40%;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.25) 80%,rgba(255,255,255,0))}
+.jelly:hover{transform:scale(1.06,.94);filter:brightness(1.05) saturate(1.1)}
+.jelly:active{transform:scale(1.1,.88)}
+.j-pink{--j1:#FFE1EF;--j2:#FF9BCB;--j3:#FF4FA0;--jd:rgba(170,20,90,.45)}
+.j-tang{--j1:#FFE6CC;--j2:#FFB067;--j3:#FF7A2E;--jd:rgba(160,60,10,.45)}
+.j-violet{--j1:#F1E6FF;--j2:#C9A9FF;--j3:#9E6BFF;--jd:rgba(80,40,170,.45)}
+.j-sky{--j1:#DDF3FF;--j2:#86D3FF;--j3:#2A9BF0;--jd:rgba(15,80,160,.45)}
+.j-mint{--j1:#DDFFF1;--j2:#7DF0C8;--j3:#14C98E;--jd:rgba(10,120,80,.45)}
+.j-lemon{--j1:#FFF7D1;--j2:#FFE27A;--j3:#FFC414;--jd:rgba(140,100,10,.45)}
+
+/* ---------- top bar ---------- */
+.bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:5;margin-block:10px 0}
+.bar .glass{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:8px 10px 8px 18px;border-radius:99px;background:var(--glass)}
+.bar .glass::after{display:none}
+.brand{font:700 1.3rem/1 var(--f-display);display:flex;align-items:center;gap:8px;text-shadow:var(--solid)}
+.halo{width:28px;height:11px;border-radius:50%;display:inline-block;transform:translateY(-7px);
+  background:transparent;box-shadow:0 0 0 3px var(--lemon),0 0 10px 2px rgba(255,214,46,.8),inset 0 0 4px rgba(255,214,46,.8)}
+nav.toc{display:flex;gap:2px;flex-wrap:wrap;flex:1;min-width:0}
+nav.toc a{font:600 .9rem/1 var(--f-display);text-decoration:none;color:var(--ink-2);padding:8px 10px;border-radius:99px}
+nav.toc a:hover{background:rgba(255,255,255,.7);color:var(--ink)}
+.meter{display:flex;align-items:center;gap:8px;font:700 .88rem var(--f-display);white-space:nowrap;padding-right:6px}
+.meter .track{width:96px;height:12px;border-radius:99px;background:rgba(53,35,64,.12);box-shadow:inset 0 1px 2px rgba(53,35,64,.2);overflow:hidden}
+.meter .fill{height:100%;width:0;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0) 55%),var(--prism);transition:width .4s var(--spring)}
+
+/* ---------- hero: art first, title card in glass ---------- */
+.hero{position:relative;margin-block:22px 26px}
+.hero-art{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:32px;box-shadow:0 18px 40px rgba(53,35,64,.22)}
+.hero-frame{position:relative;border-radius:32px}
+.hero-frame::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:4px;z-index:1;pointer-events:none;background:conic-gradient(from var(--film-a),#ff5fae,#ffd1e8 8%,#ffb347 16%,#fff3c4 24%,#5ef0bf 33%,#e2fff4 41%,#4cc4ff 50%,#e3f4ff 58%,#a47bff 66%,#f1e8ff 75%,#ff5fae 84%,#ffe0ef 92%,#ff5fae);
+  animation:film 14s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+@keyframes film{to{--film-a:360deg}}
+.title-card{position:absolute;left:24px;bottom:24px;max-width:min(520px,calc(100% - 48px));padding:20px 24px 22px;display:grid;gap:8px;z-index:2}
+.title-card h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.title-card h1 span{background:var(--prism);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;
+  filter:drop-shadow(0 .05em 0 #fff) drop-shadow(0 -.05em 0 #fff) drop-shadow(.05em 0 0 #fff) drop-shadow(-.05em 0 0 #fff) drop-shadow(0 .06em 0 rgba(53,35,64,.55))}
+.title-card .lede{font-size:1.06rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chips .jelly{font-size:.84rem;padding:.5em .95em .55em;cursor:default}
+.chips .jelly:hover{transform:none;filter:none}
+.hero-cap{font-size:.86rem;color:var(--ink-2);margin-top:10px;padding-left:8px}
+
+/* ---------- how-to ---------- */
+.howto{padding:20px 24px;display:grid;gap:14px;margin-bottom:8px}
+.howto ol{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.who-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.who-row .jelly{font-size:.95rem;padding:.5em 1.1em .56em}
+.who-row .jelly[aria-pressed="false"]{filter:saturate(.35) brightness(1.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 0 0 1px rgba(53,35,64,.18)}
+.who-row .jelly[aria-pressed="true"]::after,.film-on::after{content:"";position:absolute;inset:-4px;border-radius:99px;padding:3px;pointer-events:none;background:var(--film);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.status{font:600 .82rem var(--f-display);padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1px rgba(53,35,64,.12)}
+.status.live{background:#dcfff0;box-shadow:inset 0 0 0 1px rgba(20,201,142,.5)}
+
+/* ---------- parts ---------- */
+section.part{margin-block:34px;padding:30px clamp(18px,3.5vw,38px) 30px;scroll-margin-top:86px}
+.part-head{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.part-head .label{display:block;margin-bottom:8px}
+.btn-comment{font-size:.88rem;padding:.5em 1em .56em}
+.prose{display:grid;gap:12px;max-width:64ch}
+.prose ul{margin:0;padding-left:1.25em;display:grid;gap:4px}
+.prose li::marker{color:var(--pink)}
+.done-when{font-size:.9rem;color:var(--ink-2);padding:8px 12px;border-radius:14px;background:rgba(155,239,201,.35);box-shadow:inset 0 0 0 1px rgba(20,201,142,.3)}
+.kid{position:relative;border-radius:22px;padding:14px 18px;max-width:64ch;display:grid;gap:4px;margin-block:18px 6px;
+  background:linear-gradient(180deg,rgba(221,244,255,.95),rgba(201,235,255,.85));box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),inset 0 -6px 14px rgba(61,184,255,.18),0 6px 16px rgba(42,155,240,.15)}
+.kid .label{color:#1f5f99}
+.kid p{font:700 1.12rem/1.5 var(--f-text)}
+.split{display:grid;grid-template-columns:1.15fr 1fr;gap:28px;align-items:start;margin-block:6px 8px}
+.split > *{min-width:0}
+figure{margin:0}
+.art{display:block;width:100%;border-radius:22px;box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(201,180,255,.7),0 12px 28px rgba(53,35,64,.18)}
+.art.wide{aspect-ratio:3/2;object-fit:cover}
+.crop{aspect-ratio:3/4;background-repeat:no-repeat;background-size:200% 100%}
+figcaption{font-size:.86rem;color:var(--ink-2);margin-top:8px}
+
+/* loop + locked */
+.loop{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-block:6px 22px;padding:0;list-style:none}
+.step{border-radius:22px;padding:14px 12px 16px;display:grid;gap:4px;align-content:start;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.7));box-shadow:inset 0 0 0 1px #fff,0 6px 16px rgba(53,35,64,.1)}
+.step .orb{width:42px;height:42px;border-radius:50%;margin:0 auto 4px;display:grid;place-items:center;font:700 1.1rem var(--f-display);text-shadow:var(--solid);
+  background:radial-gradient(35% 28% at 36% 26%,rgba(255,255,255,.98),rgba(255,255,255,0)),radial-gradient(circle at 50% 45%,var(--o1) 0%,var(--o2) 70%,var(--o3) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 4px 10px -2px var(--o2)}
+.step b{font:600 1.02rem/1.15 var(--f-display)}
+.step span{font-size:.84rem;color:var(--ink-2);line-height:1.4}
+.locked{display:flex;flex-wrap:wrap;gap:10px;margin-block:10px 4px}
+.lock{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border-radius:99px;background:rgba(255,242,184,.9);box-shadow:inset 0 0 0 1px rgba(255,196,20,.6)}
+.lock svg{width:16px;height:16px;flex:none}
+.lock small{font:600 .72rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:#7a5c06}
+.lock b{font:600 1rem var(--f-display)}
+
+/* ---------- decision cards ---------- */
+.decisions{display:grid;gap:18px;margin-top:22px}
+.dcard{position:relative;border-radius:24px;padding:20px;display:grid;gap:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,251,254,.88));box-shadow:inset 0 0 0 1px #fff,0 8px 22px rgba(53,35,64,.12)}
+.dcard.done{box-shadow:inset 0 0 0 1px #fff,0 0 0 3px rgba(46,230,168,.55),0 8px 22px rgba(20,201,142,.18)}
+.dhead{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.dhead h3{flex:1;min-width:0}
+.dtags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tag{font-size:.78rem;padding:.42em .85em .46em;cursor:default}
+.tag:hover{transform:none;filter:none}
+.dq{color:var(--ink-2);max-width:64ch}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.opts.pics{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.opts.big{grid-template-columns:repeat(3,minmax(0,1fr))}
+.opt{position:relative;display:grid;gap:6px;align-content:start;text-align:left;border:0;border-radius:20px;padding:12px 14px 14px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(246,240,255,.85));box-shadow:inset 0 0 0 2px rgba(201,180,255,.55),0 3px 8px rgba(53,35,64,.06);
+  transition:transform .22s var(--spring),box-shadow .15s}
+.opt:hover{transform:scale(1.03,.97);box-shadow:inset 0 0 0 2px rgba(158,107,255,.7),0 6px 14px rgba(53,35,64,.1)}
+.opt:active{transform:scale(1.05,.93)}
+.opt[aria-checked="true"]{isolation:isolate;
+  background:radial-gradient(60% 50% at 50% 115%,rgba(255,255,255,.85),rgba(255,255,255,0) 70%),linear-gradient(180deg,#E3F6FF 0%,#9EDCFF 55%,#4FB4F5 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 -.3em .5em rgba(15,80,160,.3),inset 0 .2em .3em rgba(255,255,255,.9),0 0 0 1px rgba(15,80,160,.35),0 10px 20px -6px #2A9BF0}
+.opt[aria-checked="true"]::before{content:"";position:absolute;inset:-4px;border-radius:24px;padding:3px;pointer-events:none;background:var(--film);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.opt[aria-checked="true"]::after{content:"";position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='%23352340' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat,
+  radial-gradient(35% 28% at 36% 26%,#fff,rgba(255,255,255,0)),radial-gradient(circle at 50% 45%,#c9ffe9,#2EE6A8 70%,#14C98E);box-shadow:0 0 0 2px #fff,0 3px 8px rgba(20,201,142,.5)}
+.opt b{font:600 1.06rem/1.2 var(--f-display);padding-right:30px}
+.opt[aria-checked="true"] b{text-shadow:var(--solid)}
+.opt small{color:var(--ink-2);font-size:.86rem;line-height:1.45}
+.opt[aria-checked="true"] small{color:var(--ink)}
+.rec{justify-self:start;font:700 .68rem/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;padding:.45em .7em;border-radius:99px;
+  background:linear-gradient(180deg,#FFF7D1,#FFE27A);box-shadow:inset 0 0 0 1px rgba(255,196,20,.8);color:#5c4504}
+.thumb{aspect-ratio:3/4;border-radius:14px;background-repeat:no-repeat;background-size:400% 100%;box-shadow:0 0 0 2px #fff,0 0 0 3px rgba(201,180,255,.6)}
+.swatch{height:40px;border-radius:99px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 -6px 10px rgba(0,0,0,.12),0 0 0 2px #fff;position:relative;overflow:hidden}
+.swatch::after{content:"";position:absolute;left:8%;right:8%;top:3px;height:42%;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0))}
+.dextra{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dextra > *{min-width:0}
+.field{display:grid;gap:5px}
+.field label{font:600 .76rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.field input,.field textarea{width:100%;border:0;border-radius:14px;padding:9px 12px;background:rgba(255,255,255,.85);resize:vertical;
+  box-shadow:inset 0 0 0 2px rgba(201,180,255,.5),inset 0 2px 4px rgba(53,35,64,.06)}
+.field input:focus,.field textarea:focus{outline:none;box-shadow:inset 0 0 0 2px var(--violet),0 0 0 4px rgba(185,162,255,.35)}
+.byline{font-size:.78rem;color:var(--ink-2)}
+
+/* gates */
+.gates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-block:14px 4px;counter-reset:g;padding:0;list-style:none}
+.gates li{border-radius:18px;padding:10px 12px;font:600 .96rem/1.25 var(--f-display);background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #fff,0 4px 10px rgba(53,35,64,.08)}
+.gates li::before{counter-increment:g;content:"Stop " counter(g);display:block;font:600 .7rem var(--f-display);color:#c2246f;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+
+/* summary */
+.summary{display:grid;gap:16px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sumtable{overflow-x:auto;border-radius:18px;background:rgba(255,255,255,.8)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid rgba(201,180,255,.4);vertical-align:top}
+th{font:600 .74rem var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+td.miss{color:#7d6f8c;font-style:italic}
+pre.json{max-height:280px;overflow:auto;background:rgba(53,35,64,.92);color:#fff5dc;border-radius:18px;padding:14px;font:500 .78rem/1.55 ui-monospace,Consolas,monospace;margin:0;white-space:pre}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;pointer-events:none}
+footer{padding-block:6px 48px;color:var(--ink-2);font-size:.86rem;text-align:center}
+
+/* bubbles in the hero glass (behind text) */
+.bubbles{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0}
+.bubbles i{position:absolute;bottom:-30px;border-radius:50%;
+  background:radial-gradient(30% 30% at 32% 30%,rgba(255,255,255,.95),rgba(255,255,255,0) 60%),radial-gradient(circle,rgba(255,255,255,0) 58%,rgba(255,255,255,.5) 70%,rgba(158,107,255,.35) 82%,rgba(61,184,255,.35) 92%,rgba(255,95,174,.4) 100%);
+  animation:rise var(--d) linear infinite;animation-delay:var(--dl)}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(var(--sx),-260px);opacity:0}}
+
+@media (max-width:860px){
+  .loop{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .gates{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .split{grid-template-columns:1fr}
+  .dextra{grid-template-columns:1fr}
+  nav.toc{display:none}
+  .bar .glass{justify-content:space-between}
+  .title-card{position:relative;left:auto;bottom:auto;max-width:none;margin:-40px 10px 0}
+  .opts,.opts.pics{grid-template-columns:1fr 1fr}
+  .opts.big{grid-template-columns:1fr}
+  section.part{padding-inline:16px}
+}
+@media (max-width:420px){ .loop{grid-template-columns:repeat(2,minmax(0,1fr))} .opts{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){
+  .hero-frame::before,.bubbles i{animation:none}
+  .bubbles{display:none}
+  .jelly,.opt,.meter .fill{transition:none}
+  .jelly:hover,.opt:hover{transform:none}
+  .jelly:active,.opt:active{transform:translateY(2px)}
+}
+@media (prefers-reduced-transparency:reduce){
+  .glass{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff6fa}
+  .world::after{display:none}
+}
+@media (forced-colors:active){ :focus-visible{outline:2px solid CanvasText} }
+</style>
+
+<div class="world" aria-hidden="true"></div>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="glass">
+      <div class="brand"><span class="halo" aria-hidden="true"></span>Tenshi</div>
+      <nav class="toc" aria-label="Sections">
+        <a href="#style">Art style</a><a href="#story">Story</a><a href="#heroes">Heroes</a><a href="#loop">Loop</a><a href="#rome">Rome</a><a href="#mermaid">Mermaid</a><a href="#dance">Dance</a><a href="#battle">Battle</a><a href="#making">Making it</a><a href="#answers">Answers</a>
+      </nav>
+      <div class="meter" title="Decisions answered"><div class="track"><div class="fill" id="meterFill"></div></div><span id="meterText">0 / 0</span></div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-frame">
+      <img class="hero-art" src="art/keyart.webp" alt="Two chibi angels with gel halos and holographic wings fly over a pearlescent Ancient Rome while an aqua mermaid with a glitter-jelly tail waves from a liquid-glass fountain." width="1536" height="1024">
+      <div class="title-card glass">
+        <div class="bubbles" aria-hidden="true">
+          <i style="left:8%;width:14px;height:14px;--d:7s;--dl:-1s;--sx:10px"></i><i style="left:22%;width:8px;height:8px;--d:5.5s;--dl:-3s;--sx:-6px"></i>
+          <i style="left:47%;width:20px;height:20px;--d:9s;--dl:-5s;--sx:14px"></i><i style="left:70%;width:10px;height:10px;--d:6s;--dl:-2s;--sx:-10px"></i>
+          <i style="left:88%;width:16px;height:16px;--d:8s;--dl:-6s;--sx:8px"></i>
+        </div>
+        <span class="label">Game design document · v0.3 draft · 31 Oct 2026</span>
+        <h1>Tenshi <span>Game</span></h1>
+        <p class="lede">Two little angels explore a sunny Ancient Rome, make friends with a Mermaid, dance to power her up, and win one tiny battle to bring back balance.</p>
+        <div class="chips"><span class="jelly j-pink">Made by Amelia + parent</span><span class="jelly j-sky">Built by AI helpers</span><span class="jelly j-mint">2-player co-op</span></div>
+      </div>
+    </div>
+    <p class="hero-cap">Concept art made with gpt-image-2.5 to help us imagine. Nothing here is final until you say yes.</p>
+  </header>
+
+  <div class="howto glass">
+    <div class="who-row">
+      <span class="label">I am answering as</span>
+      <button type="button" class="jelly j-pink" id="whoAmelia" data-who="Amelia" aria-pressed="false">Amelia</button>
+      <button type="button" class="jelly j-tang" id="whoParent" data-who="Parent" aria-pressed="true">Parent</button>
+      <span class="status" id="saveStatus">Saving on this device</span>
+    </div>
+    <ol>
+      <li>Read each part. The <b>blue bubbles</b> are the short version for Amelia.</li>
+      <li>Tap an answer on each <b>decision card</b>. Add a note if you want to explain.</li>
+      <li>Want to say something about a whole part? Press <b>Comment on this part</b>.</li>
+      <li>When you are done, go to <a href="#answers">Answers</a> and save the JSON file for Claude.</li>
+    </ol>
+  </div>
+
+  <!-- ART STYLE -->
+  <section class="part glass" id="style" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 0 · Decide this first</span><h2>Our art style</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="prose">
+      <p>Every picture, sprite, menu and effect in the game will follow one art style, so we lock it before anything else gets drawn. The direction so far: <b>cute, chunky anime that feels modern, juicy and shiny</b>, in our rainbow prism palette (the same family as Maze so Puzzle and SSS), with gel, slime, liquid glass and holographic shine.</p>
+      <p>The three pictures below show the same scene in three finishes. Choose one, then tune it with the smaller questions. Claude writes your answers into <code>docs/ART_STYLE.md</code>, and every future art prompt has to follow it.</p>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>Same picture, three ways to draw it. Which one looks the most like <i>our</i> game?</p></div>
+    <div class="decisions" data-section="style"></div>
+  </section>
+
+  <!-- STORY -->
+  <section class="part glass" id="story" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 1 · Story</span><h2>Bring back balance</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="prose">
+      <p>The angels serve a kind goddess. The demons have pushed too far toward heaven, and the world has tipped out of balance. The heroes don't destroy the demons. They push them back to where they belong, so heaven and the world are even again.</p>
+      <ul>
+        <li>Happy ending: balance is restored.</li>
+        <li>No scary horror and no realistic violence.</li>
+        <li>Amelia already said no to the sad ending idea.</li>
+      </ul>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>The demons got too greedy. Our angels help everyone go back to their own place, and then everyone is happy.</p></div>
+    <div class="decisions" data-section="story"></div>
+  </section>
+
+  <!-- HEROES -->
+  <section class="part glass" id="heroes" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 2 · Heroes</span><h2>Two little Tenshi</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="prose">
+      <p>One pretty anime girl angel and one cute young boy angel. Each player controls one. They walk, jump, and help each other. Neither one is "player 2". They are a team.</p>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>You and a friend each get an angel. You need each other to win.</p></div>
+    <div class="decisions" data-section="heroes"></div>
+  </section>
+
+  <!-- LOOP -->
+  <section class="part glass" id="loop" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 3 · The whole first game</span><h2>Six steps, then we stop</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <ol class="loop">
+      <li class="step" style="--o1:#FFE1EF;--o2:#FF8FC0;--o3:#FF4FA0"><span class="orb">1</span><b>Explore Rome</b><span>Run and jump through one short level</span></li>
+      <li class="step" style="--o1:#FFE6CC;--o2:#FFB27A;--o3:#FF7A2E"><span class="orb">2</span><b>Meet the Mermaid</b><span>She waits at the fountain</span></li>
+      <li class="step" style="--o1:#FFF7D1;--o2:#FFE27A;--o3:#FFC414"><span class="orb">3</span><b>Make friends</b><span>She joins the team</span></li>
+      <li class="step" style="--o1:#DDFFF1;--o2:#9BEFC9;--o3:#14C98E"><span class="orb">4</span><b>Dance together</b><span>One very easy rhythm game</span></li>
+      <li class="step" style="--o1:#DDF3FF;--o2:#9CDEFF;--o3:#2A9BF0"><span class="orb">5</span><b>Tiny battle</b><span>Mermaid helps push demons back</span></li>
+      <li class="step" style="--o1:#F1E6FF;--o2:#C9B4FF;--o3:#9E6BFF"><span class="orb">6</span><b>Win the fort</b><span>One fortification is ours again</span></li>
+    </ol>
+    <span class="label">Already decided (locked)</span>
+    <div class="locked">
+      <span class="lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#FFC414" stroke="#352340" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#352340" stroke-width="1.4"/></svg><small>World</small><b>Ancient Rome</b></span>
+      <span class="lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#FFC414" stroke="#352340" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#352340" stroke-width="1.4"/></svg><small>Creature</small><b>Mermaid</b></span>
+      <span class="lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#FFC414" stroke="#352340" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#352340" stroke-width="1.4"/></svg><small>Engine</small><b>Godot 4</b></span>
+      <span class="lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#FFC414" stroke="#352340" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#352340" stroke-width="1.4"/></svg><small>Players</small><b>2-player co-op</b></span>
+      <span class="lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#FFC414" stroke="#352340" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#352340" stroke-width="1.4"/></svg><small>Ending</small><b>Restore balance</b></span>
+      <span class="lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="2" fill="#FFC414" stroke="#352340" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#352340" stroke-width="1.4"/></svg><small>Size</small><b>Tiny slice first</b></span>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>Rome, Mermaid, dance, battle. That's the whole first game. Tiny first, big later.</p></div>
+    <div class="decisions" data-section="loop"></div>
+  </section>
+
+  <!-- ROME -->
+  <section class="part glass" id="rome" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 4 · Mode A · Explore</span><h2>A sunny Roman diorama</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="split">
+      <figure>
+        <img class="art wide" src="art/level.webp" alt="Side-scrolling level concept: two chibi angels jump across pearlescent marble columns with glossy red jelly tops toward a liquid-glass fountain where an aqua mermaid waits." width="1536" height="1024" loading="lazy">
+        <figcaption>Level mood: jelly-topped marble columns, glossy banners, a temple, and the fountain where the Mermaid waits.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>One short side-scrolling level, more like a playable toy box than a big stage. Both angels are on screen at once.</p>
+        <ul>
+          <li>Move left and right, and jump</li>
+          <li>A few easy obstacles</li>
+          <li>Ends at the fountain where you meet the Mermaid</li>
+        </ul>
+        <p class="done-when">Done when: both players can reach the fountain, and it clearly looks like Rome.</p>
+      </div>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>Hop across the columns to find the Mermaid at the fountain. What should Rome have in it?</p></div>
+    <div class="decisions" data-section="rome"></div>
+  </section>
+
+  <!-- MERMAID -->
+  <section class="part glass" id="mermaid" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 5 · Creature</span><h2>Our Mermaid friend</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <figure>
+      <img class="art wide" src="art/mermaids.webp" alt="Four chibi mermaids with glitter-jelly tails and holographic fins: aqua and gentle, pink and giggling with a bubble, lilac and brave with a crystal trident, rainbow-tailed and winking." width="1536" height="1024" loading="lazy">
+      <figcaption>Four ideas for her. Pick a personality and a colour below. You can mix them, for example a brave aqua one.</figcaption>
+    </figure>
+    <div class="prose" style="margin-top:18px">
+      <p>She lives in the Roman fountain and does sparkly water magic. Her tail is glitter jelly and her fins are like holographic glass. She must look cute as a friend and still be able to help in a battle, with an outline that's easy to see.</p>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>This is your Mermaid. You get to choose what she's like, her colour, and her name.</p></div>
+    <div class="decisions" data-section="mermaid"></div>
+  </section>
+
+  <!-- DANCE -->
+  <section class="part glass" id="dance" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 6 · Mode B · Rhythm</span><h2>Dance to power up</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="split">
+      <figure>
+        <div class="art crop" style="background-image:url(art/rhythm.webp);background-position:0% 50%" role="img" aria-label="Rhythm concept: an aqua mermaid dances on a liquid-glass fountain stage while pink and blue jelly stars fall toward two big glowing jelly buttons."></div>
+        <figcaption>Rhythm mood: jelly stars fall onto one big button per player.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>A very short song, about 20 to 30 seconds. Each player has <b>one button</b>. Press it on the beat. It's the easiest mode only, and you can't really fail.</p>
+        <ul>
+          <li>Both players help</li>
+          <li>Big, happy feedback on every hit</li>
+          <li>At the end the Mermaid powers up, and you can see it</li>
+        </ul>
+        <p class="done-when">Done when: each player helps, and the Mermaid looks different afterwards.</p>
+      </div>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>Press your button when the music says so. The Mermaid dances and gets super powers.</p></div>
+    <div class="decisions" data-section="dance"></div>
+  </section>
+
+  <!-- BATTLE -->
+  <section class="part glass" id="battle" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 7 · Mode C · Battle</span><h2>One tiny magical skirmish</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="split">
+      <figure>
+        <div class="art crop" style="background-image:url(art/rhythm.webp);background-position:100% 50%" role="img" aria-label="Battle concept: two chibi angels and a glowing mermaid splash rainbow water magic at round grumpy jelly imps wearing little Roman helmets, in front of a pearlescent fort."></div>
+        <figcaption>Battle mood: angels and the powered-up Mermaid against silly jelly imps. (The sketch drew two girl angels. The real team is one girl and one boy.)</figcaption>
+      </figure>
+      <div class="prose">
+        <p>The two angels are the generals. The upgraded Mermaid fights beside them against one small group of demons. When you win, the fort switches back to your side.</p>
+        <ul>
+          <li>Both angels can move</li>
+          <li>The Mermaid helps by herself</li>
+          <li>Clear "you won!" moment, and the fort changes</li>
+        </ul>
+        <p class="done-when">Done when: you can win, and the fort clearly shows it's reclaimed.</p>
+      </div>
+    </div>
+    <div class="kid"><span class="label">For Amelia</span><p>The demons took a fort. You, your angel friend and the Mermaid win it back.</p></div>
+    <div class="decisions" data-section="battle"></div>
+  </section>
+
+  <!-- MAKING IT -->
+  <section class="part glass" id="making" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Part 8 · How we build it</span><h2>Humans choose, AI builds</h2></div>
+      <button class="jelly j-violet btn-comment" type="button" data-comment>Comment on this part</button>
+    </div>
+    <div class="prose">
+      <p>The AI helpers build one small piece at a time, then stop and show you. Nothing counts as approved just because an AI made it. These are the stops:</p>
+    </div>
+    <ol class="gates">
+      <li>Prototype plan</li><li>Godot project set up</li><li>Platforming level</li><li>Mermaid recruit</li><li>Rhythm game</li><li>Battle</li><li>Whole slice connected</li><li>Art pass</li>
+    </ol>
+    <div class="kid"><span class="label">For Amelia</span><p>You're the boss. The AI shows you, and you say "yes", "no", or "change this".</p></div>
+    <div class="decisions" data-section="making"></div>
+  </section>
+
+  <!-- ANSWERS -->
+  <section class="part glass" id="answers" data-comment-target>
+    <div class="part-head">
+      <div><span class="label">Hand-off</span><h2>Your answers for Claude</h2></div>
+    </div>
+    <div class="summary">
+      <p class="dq" id="sumIntro">Your answers save as you go. Save the JSON file and give it to Claude (or just tell Claude "read the GDD answers"), and it will turn your choices into the next plan.</p>
+      <div class="actions">
+        <button class="jelly j-tang" type="button" id="btnSave">Save answers (.json)</button>
+        <button class="jelly j-sky" type="button" id="btnCopy">Copy JSON</button>
+        <label class="jelly j-mint" for="fileLoad">Load a JSON file</label>
+        <input type="file" id="fileLoad" accept="application/json,.json" hidden>
+        <button class="jelly j-violet" type="button" id="btnShow">Show JSON</button>
+      </div>
+      <div class="sumtable"><table><thead><tr><th>Decision</th><th>Who</th><th>Answer</th><th>Note</th></tr></thead><tbody id="sumBody"></tbody></table></div>
+      <pre class="json" id="jsonOut" hidden></pre>
+    </div>
+  </section>
+
+  <footer>Tenshi Game · GDD v0.3 draft · Style: gel and glass with the MSP/SSS prism palette · Concept art: gpt-image-2.5-sunburst, mood reference only</footer>
+</div>
+<div class="toast jelly j-violet" id="toast" hidden></div>
+
+<script>
+const IMG_M = "art/mermaids.webp";
+const D = [
+ // ART STYLE
+ {id:"art_style", s:"style", who:"Both", t:"Which finish should the whole game use?",
+  q:"Look at the faces, the water and the shine. This sets every picture in the game.", type:"one", pics:true, square:true, other:true, opts:[
+  {v:"A_gloss", l:"A · Juicy gloss", d:"Smooth, polished and super shiny everywhere. Most 'premium phone game'.", img:"art/style-a-gloss.webp"},
+  {v:"B_handmade_gloss", l:"B · Gloss + hand-drawn", d:"Shiny jelly, water and eyes on soft hand-inked lines and paper grain. Storybook meets modern anime.", img:"art/style-b-handmade.webp", rec:1},
+  {v:"C_bold_cel", l:"C · Bold and chunky", d:"Thick outlines, flat bright colours, shine only on magic. Easiest to read and to animate.", img:"art/style-c-cel.webp"}]},
+ {id:"shine_amount", s:"style", who:"Both", t:"Where does the gel and glass shine go?",
+  q:"Too much shine everywhere can get noisy. Shine is strongest where it means something.", type:"one", opts:[
+  {v:"everywhere", l:"Everywhere", d:"Hair, clothes, stone, everything glossy."},
+  {v:"magic_focus", l:"On magic things", d:"Eyes, halos, Mermaid tail, water, magic, buttons and rewards. Everything else stays softer.", rec:1},
+  {v:"minimal", l:"Just a little", d:"Only on magic spells and the UI."}]},
+ {id:"texture", s:"style", who:"Both", t:"How much hand-made texture?",
+  q:"Texture makes it feel drawn by a person, not a computer.", type:"one", opts:[
+  {v:"none", l:"None, smooth digital", d:"Clean gradients."},
+  {v:"light_grain", l:"A light paper and pencil grain", d:"You notice it in shadows and backgrounds, not on faces.", rec:1},
+  {v:"storybook", l:"Strong storybook texture", d:"Watercolour paper and painted backgrounds you can really see."}]},
+ {id:"outline", s:"style", who:"Amelia", t:"What kind of outlines?",
+  q:"Outlines help characters stand out from busy backgrounds.", type:"one", opts:[
+  {v:"thin_colour", l:"Thin coloured lines", d:"Soft and delicate."},
+  {v:"medium_inked", l:"Medium hand-inked lines", d:"Coloured ink, thicker on the outside, thinner inside.", rec:1},
+  {v:"thick_bold", l:"Thick bold outlines", d:"Sticker-like and very easy to see."}]},
+ {id:"proportions", s:"style", who:"Amelia", t:"How chunky are the characters?",
+  q:"'Heads tall' means how many heads stack up to make the whole body.", type:"one", opts:[
+  {v:"chibi_2_3", l:"Super chunky chibi", d:"About 2 to 3 heads tall. Big heads, tiny bodies.", rec:1},
+  {v:"cute_4", l:"Cute but a bit taller", d:"About 4 heads tall, like the pictures above."},
+  {v:"mix", l:"Mix it", d:"Chunky chibi while playing, taller in story pictures and menus."}]},
+ {id:"sprite_match", s:"style", who:"Parent", t:"How closely do in-game sprites match the illustrations?",
+  q:"Moving sprites are small and animated, so some simplification is normal.", type:"one", opts:[
+  {v:"same_simplified", l:"Same style, simplified", d:"Same lines, palette and shine rules, with fewer details at small sizes.", rec:1},
+  {v:"flatter_sprites", l:"Flatter sprites, full art elsewhere", d:"Cel-shaded sprites. Full finish only on story pictures, menus and key art."},
+  {v:"full_everywhere", l:"Full finish everywhere", d:"Prettiest, but more art work for each animation."}]},
+ // STORY
+ {id:"demon_fate", s:"story", who:"Amelia", t:"What happens to a demon when the angels win?",
+  q:"This shows the 'balance, not destroy' idea in the game.", type:"one", other:true, opts:[
+  {v:"go_home", l:"They zoom back home", d:"Poof, back through a portal to their own land.", rec:1},
+  {v:"calm_down", l:"They calm down and sparkle", d:"They turn sleepy and cute, then float away."},
+  {v:"become_friends", l:"Some become friends", d:"A sorry demon waves goodbye. Could be a future creature!"}]},
+ {id:"goddess_role", s:"story", who:"Both", t:"How much do we see the goddess in the first slice?",
+  q:"More story means more work, so keep it tiny.", type:"one", opts:[
+  {v:"intro_card", l:"One picture at the start", d:"A single still picture with one line of text.", rec:1},
+  {v:"voice_only", l:"Just a speech bubble", d:"No picture, only her words."},
+  {v:"later", l:"Save her for later", d:"The first slice starts straight in Rome."}]},
+ // HEROES
+ {id:"angel_names", s:"heroes", who:"Amelia", t:"What are the angels called?",
+  q:"Type a name for each angel. Leave it blank if you want ideas from Claude.", type:"text", fields:[
+  {k:"girl", l:"Girl angel's name", ph:"e.g. Hikari"},{k:"boy", l:"Boy angel's name", ph:"e.g. Sora"}]},
+ {id:"angel_outfit", s:"heroes", who:"Amelia", t:"What should the angels wear?",
+  q:"This sets their look for the whole game.", type:"one", other:true, opts:[
+  {v:"classic", l:"Classic white and gold", d:"Robes, halos, feathery wings, like the top picture.", rec:1},
+  {v:"magical_girl", l:"Magical girl sparkle", d:"Pastel outfits, ribbons, a transformation pose."},
+  {v:"pop_stage", l:"Pop star stage outfits", d:"Bold colours and matching team jackets."}]},
+ {id:"controls", s:"heroes", who:"Parent", t:"How will two people play on one PC?",
+  q:"We build local co-op first. This decides what we test with.", type:"one", opts:[
+  {v:"shared_keyboard", l:"Share one keyboard", d:"WASD + Space for one player, arrows + Enter for the other. Nothing to buy."},
+  {v:"two_gamepads", l:"Two gamepads", d:"Comfiest for kids, but needs two controllers."},
+  {v:"both", l:"Support both", d:"A little more setup work, and it works for everyone.", rec:1}]},
+ // LOOP
+ {id:"slice_length", s:"loop", who:"Parent", t:"How long should one play of the slice take?",
+  q:"Shorter is easier to build and polish.", type:"one", opts:[
+  {v:"3min", l:"About 3 minutes", d:"About one minute per mode. Fastest to build.", rec:1},
+  {v:"5to8", l:"5 to 8 minutes", d:"Room for a little more level and a longer song."},
+  {v:"10plus", l:"10 minutes or more", d:"Probably too big for a first slice."}]},
+ {id:"fail_rule", s:"loop", who:"Both", t:"What happens if you mess up?",
+  q:"The first slice must be low-stress.", type:"one", other:true, opts:[
+  {v:"never_fail", l:"You can never lose", d:"Falls just pop you back nearby. The battle always ends in a win.", rec:1},
+  {v:"soft_hearts", l:"Hearts that refill", d:"You can lose hearts, but they come back quickly."},
+  {v:"checkpoint", l:"Try again from a checkpoint", d:"Classic platformer retry."}]},
+ // ROME
+ {id:"rome_features", s:"rome", who:"Amelia", t:"What should the Rome level have?",
+  q:"Pick as many as you like. (From Session 01.)", type:"many", other:true, opts:[
+  {v:"columns", l:"Big marble columns", d:"Jump on them like steps.", rec:1},
+  {v:"fountain", l:"A fountain", d:"Where the Mermaid lives.", rec:1},
+  {v:"banners", l:"Red banners", d:"Flappy Roman flags."},
+  {v:"sunny_sky", l:"A sunny sky", d:"Blue sky and fluffy clouds.", rec:1},
+  {v:"temple", l:"A little temple", d:"In the background."},
+  {v:"arches", l:"Arches and an aqueduct", d:"Big stone bridges for water."}]},
+ {id:"camera", s:"rome", who:"Parent", t:"How does the camera handle two players?",
+  q:"This affects how fun co-op feels.", type:"one", opts:[
+  {v:"shared_zoom", l:"One shared screen that zooms", d:"Zooms out when the angels move apart. Kirby-style friendly.", rec:1},
+  {v:"leash", l:"Shared screen, no zoom", d:"Players can't wander far apart. Simplest."},
+  {v:"split", l:"Split screen", d:"Each player gets half. Harder to read for little players."}]},
+ {id:"history", s:"rome", who:"Both", t:"How much real Roman history goes in?",
+  q:"History is playful flavour, never homework.", type:"one", opts:[
+  {v:"fact_card", l:"One fun fact card at the end", d:"For example, 'Romans built fountains all over their cities!'", rec:1},
+  {v:"latin_signs", l:"Latin words on signs", d:"Little signs like SALVE ('hello')."},
+  {v:"none_yet", l:"None yet", d:"Add it after the slice is fun."}]},
+ // MERMAID
+ {id:"mermaid_personality", s:"mermaid", who:"Amelia", t:"What should the Mermaid be like?",
+  q:"Her personality. The pictures are just for ideas.", type:"one", pics:true, opts:[
+  {v:"gentle", l:"Sweet and gentle", d:"Kind and calm.", crop:0},
+  {v:"silly", l:"Silly and funny", d:"Giggles and blows bubbles.", crop:1},
+  {v:"brave", l:"Brave and strong", d:"Holds a little trident.", crop:2},
+  {v:"mischief", l:"Mischievous and playful", d:"Winks and plays tricks.", crop:3}]},
+ {id:"mermaid_colour", s:"mermaid", who:"Amelia", t:"What colour should she feel most like?",
+  q:"You can mix this with any personality.", type:"one", opts:[
+  {v:"aqua", l:"Blue / aqua", sw:"linear-gradient(90deg,#16b5c0,#7fe3e6)"},
+  {v:"pink", l:"Pink / peach", sw:"linear-gradient(90deg,#ff7d7d,#ffc2a8)"},
+  {v:"lavender", l:"Purple / lavender", sw:"linear-gradient(90deg,#7b4bd1,#c8a8ff)"},
+  {v:"rainbow", l:"Rainbow sparkle", sw:"linear-gradient(90deg,#ff5d5d,#ffb13b,#ffe74a,#4fd67b,#4aa8ff,#a46bff)"}]},
+ {id:"mermaid_name", s:"mermaid", who:"Amelia", t:"What is her name?",
+  q:"Pick one or type your own.", type:"one", other:true, otherLabel:"My own name", opts:[
+  {v:"Marina", l:"Marina", d:"'Of the sea' in Latin."},
+  {v:"Perla", l:"Perla", d:"Like a pearl."},
+  {v:"Coralie", l:"Coralie", d:"Like coral."},
+  {v:"Aquila", l:"Aquila", d:"A real Roman name. It means eagle, which is a funny name for a fish girl."}]},
+ {id:"recruit_how", s:"mermaid", who:"Both", t:"How do the angels make friends with her?",
+  q:"This is the 'recruit' moment. Keep it to one simple action.", type:"one", other:true, opts:[
+  {v:"lost_shell", l:"Find her lost shell", d:"The shell is hidden in the level. Bring it back to the fountain.", rec:1},
+  {v:"together_button", l:"Both angels say hello together", d:"Stand next to her and both press a button at the same time."},
+  {v:"fill_fountain", l:"Fix the fountain", d:"The demons dried it up. Press two switches to make it flow again."}]},
+ // DANCE
+ {id:"dance_feel", s:"dance", who:"Amelia", t:"What should the dance feel like?",
+  q:"From Session 01.", type:"one", opts:[
+  {v:"twinkly", l:"Gentle and twinkly", d:"Soft bells and slow sparkles."},
+  {v:"bouncy", l:"Bouncy and happy", d:"Clap-along pop beat.", rec:1},
+  {v:"magical", l:"Sparkly magical", d:"Big shimmering whooshes."}]},
+ {id:"note_style", s:"dance", who:"Both", t:"How do you know when to press?",
+  q:"One button each is already decided. This is what you watch for.", type:"one", opts:[
+  {v:"falling_stars", l:"Falling stars", d:"Stars fall onto your button. Press when they land.", rec:1},
+  {v:"pulse_ring", l:"Growing rings", d:"A ring grows around the Mermaid. Press when it touches the circle."},
+  {v:"copy_me", l:"Copy the Mermaid", d:"She does a pattern, then you copy it."}]},
+ {id:"miss_note", s:"dance", who:"Both", t:"What happens if you miss a beat?",
+  q:"It should never feel bad.", type:"one", opts:[
+  {v:"nothing", l:"Nothing bad", d:"You just don't get that sparkle.", rec:1},
+  {v:"giggle", l:"The Mermaid giggles", d:"A funny splash, then the song carries on."},
+  {v:"slow_down", l:"The song gets easier", d:"It quietly slows down to help."}]},
+ {id:"upgrade_look", s:"dance", who:"Amelia", t:"How does she look after she powers up?",
+  q:"This change must be easy to see.", type:"one", other:true, opts:[
+  {v:"transform", l:"Magical transformation", d:"A twirl, a new outfit and a sparkly tail.", rec:1},
+  {v:"crown_glow", l:"Water crown and glow", d:"Same look, plus a glowing crown and aura."},
+  {v:"bigger", l:"Grows bigger", d:"Bigger tail and big bubbles around her."}]},
+ {id:"music_source", s:"dance", who:"Parent", t:"Where does the song come from?",
+  q:"No paid tools without approval.", type:"one", opts:[
+  {v:"amelia_hums", l:"Amelia hums, we record it", d:"Very personal, and a fun session. Needs a little audio cleanup."},
+  {v:"simple_made", l:"AI makes a simple tune", d:"A short chiptune-style loop, made in code. Free.", rec:1},
+  {v:"free_track", l:"Free music track (CC0)", d:"Pick from free asset sites."}]},
+ // BATTLE
+ {id:"battle_style", s:"battle", who:"Both", t:"How does the battle play?",
+  q:"Should feel like a mini skirmish, not a strategy game.", type:"one", opts:[
+  {v:"realtime", l:"Run around, Mermaid helps", d:"Move your angel, tap to cast. The Mermaid splashes nearby demons by herself.", rec:1},
+  {v:"turns", l:"Take turns from a menu", d:"Pick 'Splash' or 'Sparkle', and the demons take turns too."},
+  {v:"lane", l:"Defend the path", d:"Demons walk down a path. Put the Mermaid where she can splash them."}]},
+ {id:"enemy_look", s:"battle", who:"Amelia", t:"What do the demons look like?",
+  q:"Silly, never scary.", type:"one", other:true, opts:[
+  {v:"imps", l:"Grumpy little imps", d:"Round, red, with tiny horns, like the sketch.", rec:1},
+  {v:"clouds", l:"Stormy rain clouds", d:"Cross little clouds that rumble."},
+  {v:"blobs", l:"Shadow blobs with eyes", d:"Wobbly purple jelly."}]},
+ {id:"fort_reclaim", s:"battle", who:"Amelia", t:"How do we show the fort is ours again?",
+  q:"The big 'we did it!' moment.", type:"one", opts:[
+  {v:"banner_flip", l:"Banner flips to angel colours", d:"The demon flag turns into a gold and white one."},
+  {v:"bloom", l:"Flowers bloom and the fountain sprays", d:"The whole fort turns colourful."},
+  {v:"glow_cheer", l:"Fort glows and everyone cheers", d:"Halo light and confetti.", rec:1}]},
+ // MAKING
+ {id:"art_pipeline", s:"making", who:"Parent", t:"How do we make the game art?",
+  q:"Affects cost, speed and how much it feels like 'ours'.", type:"one", opts:[
+  {v:"shapes_first", l:"Simple shapes first, art later", d:"Prove it's fun with boxes and circles, then do art at Gate 8.", rec:1},
+  {v:"ai_drafts", l:"AI drafts, we approve", d:"Cheap generated sprites, reviewed by both of you."},
+  {v:"amelia_draws", l:"Amelia draws, we clean it up", d:"Scan her drawings and turn them into sprites."}]},
+ {id:"review_style", s:"making", who:"Both", t:"How should Amelia review each stop?",
+  q:"At every gate the AI shows the result.", type:"one", other:true, opts:[
+  {v:"page_like_this", l:"A page like this one", d:"Pictures, plus tap yes, no or change.", rec:1},
+  {v:"play_together", l:"Play it together, then talk", d:"Parent writes down what she says."},
+  {v:"short_video", l:"A short video to watch", d:"A GIF or clip of what changed."}]},
+];
+
+const SECTIONS = {style:"Art style",story:"Story",heroes:"Heroes",loop:"Loop",rome:"Rome",mermaid:"Mermaid",dance:"Dance",battle:"Battle",making:"Making it"};
+const LS_KEY = "tenshi-gdd-answers-v1", LS_WHO = "tenshi-gdd-who";
+let answers = {};          // id -> {choice, other, fields, note, by, uid, at}
+let who = "Parent";
+let db = null, uid = null, dbLive = false;
+
+function lsGet(k){ try{ return localStorage.getItem(k) }catch(e){ return null } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v) }catch(e){} }
+try{ answers = JSON.parse(lsGet(LS_KEY)||"{}") || {} }catch(e){ answers = {} }
+who = lsGet(LS_WHO) || "Parent";
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = s => document.querySelector(s);
+
+function isAnswered(d){
+  const a = answers[d.id]; if(!a) return false;
+  if(d.type==="text") return Object.values(a.fields||{}).some(v=>v && v.trim());
+  if(d.type==="many") return (a.choice||[]).length>0 || !!(a.other&&a.other.trim());
+  return !!a.choice || !!(a.other&&a.other.trim());
+}
+
+function cardHTML(d){
+  const tagCls = d.who==="Amelia"?"j-pink":d.who==="Parent"?"j-tang":"j-violet";
+  const whoTxt = d.who==="Both"?"Choose together":d.who+" chooses";
+  let body = "";
+  if(d.type==="text"){
+    body = `<div class="dextra">${d.fields.map(f=>`<div class="field"><label for="f-${d.id}-${f.k}">${esc(f.l)}</label><input id="f-${d.id}-${f.k}" data-field="${f.k}" placeholder="${esc(f.ph||"")}" maxlength="60"></div>`).join("")}</div>`;
+  } else {
+    const role = d.type==="many" ? "checkbox" : "radio";
+    body = `<div class="opts${d.pics?" pics":""}${d.square?" big":""}" role="${d.type==="many"?"group":"radiogroup"}" aria-label="${esc(d.t)}">` + d.opts.map(o=>{
+      const vis = o.img ? `<div class="thumb" style="aspect-ratio:1;background-image:url(${o.img});background-size:cover;background-position:center" aria-hidden="true"></div>`
+                : o.crop!=null ? `<div class="thumb" style="background-image:url(${IMG_M});background-position:${[0,33.333,66.666,100][o.crop]}% 50%" aria-hidden="true"></div>`
+                : o.sw ? `<div class="swatch" style="background:${o.sw}" aria-hidden="true"></div>` : "";
+      return `<button type="button" class="opt" role="${role}" aria-checked="false" data-v="${esc(o.v)}">${vis}<b>${esc(o.l)}</b>${o.d?`<small>${esc(o.d)}</small>`:""}${o.rec?`<span class="rec">Claude suggests</span>`:""}</button>`;
+    }).join("") + `</div>`;
+  }
+  const other = d.other ? `<div class="field"><label for="o-${d.id}">${esc(d.otherLabel||"Something else")}</label><textarea id="o-${d.id}" data-other rows="1" placeholder="Type your own idea" maxlength="4000"></textarea></div>` : `<div></div>`;
+  return `<article class="dcard" id="d-${d.id}" data-id="${d.id}" data-comment-target>
+    <div class="dhead"><h3>${esc(d.t)}</h3><div class="dtags"><span class="jelly tag ${tagCls}">${whoTxt}</span><span class="jelly tag j-mint" data-donetag hidden>Answered</span></div></div>
+    <p class="dq">${esc(d.q)}</p>
+    ${body}
+    <div class="dextra">${other}<div class="field"><label for="n-${d.id}">Note (why, or what to change)</label><textarea id="n-${d.id}" data-note rows="2" maxlength="8000" placeholder="Optional"></textarea></div></div>
+    <div class="byline" data-byline></div>
+  </article>`;
+}
+
+function renderAll(){
+  for(const sec of Object.keys(SECTIONS)){
+    const host = document.querySelector(`.decisions[data-section="${sec}"]`);
+    host.innerHTML = D.filter(d=>d.s===sec).map(cardHTML).join("");
+  }
+  D.forEach(d=>syncCard(d,true));
+  syncWho(); syncSummary();
+}
+
+function syncCard(d, force){
+  const el = document.getElementById("d-"+d.id); if(!el) return;
+  const a = answers[d.id] || {};
+  el.querySelectorAll(".opt").forEach(b=>{
+    const on = d.type==="many" ? (a.choice||[]).includes(b.dataset.v) : a.choice===b.dataset.v;
+    b.setAttribute("aria-checked", on?"true":"false");
+  });
+  const setVal = (inp,v)=>{ if(inp && (force || document.activeElement!==inp)) inp.value = v||"" };
+  el.querySelectorAll("[data-field]").forEach(i=>setVal(i,(a.fields||{})[i.dataset.field]));
+  setVal(el.querySelector("[data-other]"), a.other);
+  setVal(el.querySelector("[data-note]"), a.note);
+  const done = isAnswered(d);
+  el.classList.toggle("done", done);
+  el.querySelector("[data-donetag]").hidden = !done;
+  el.querySelector("[data-byline]").textContent = a.at ? `Last changed by ${a.by||"someone"} · ${new Date(a.at).toLocaleString()}` : "";
+}
+
+function labelFor(d,v){ const o=(d.opts||[]).find(o=>o.v===v); return o?o.l:v }
+function answerText(d){
+  const a = answers[d.id]; if(!a) return "";
+  if(d.type==="text") return d.fields.map(f=>`${f.l.replace("'s name","")}: ${(a.fields||{})[f.k]||"—"}`).join(" · ");
+  const parts = d.type==="many" ? (a.choice||[]).map(v=>labelFor(d,v)) : (a.choice?[labelFor(d,a.choice)]:[]);
+  if(a.other && a.other.trim()) parts.push(`“${a.other.trim()}”`);
+  return parts.join(", ");
+}
+
+function syncSummary(){
+  const n = D.filter(isAnswered).length;
+  $("#meterText").textContent = `${n} / ${D.length}`;
+  $("#meterFill").style.width = (100*n/D.length)+"%";
+  $("#sumBody").innerHTML = D.map(d=>{
+    const t = answerText(d), note = (answers[d.id]||{}).note||"";
+    return `<tr><td><a href="#d-${d.id}">${esc(d.t)}</a></td><td>${esc(d.who)}</td><td class="${t?"":"miss"}">${t?esc(t):"Not answered yet"}</td><td>${esc(note)}</td></tr>`;
+  }).join("");
+  if(!$("#jsonOut").hidden) $("#jsonOut").textContent = exportJSON();
+}
+
+function exportObj(){
+  return {
+    project:"Tenshi Game", document:"GDD v0.3 draft", exported_at:new Date().toISOString(),
+    answered:D.filter(isAnswered).length, total:D.length,
+    locked:{world:"Ancient Rome",creature:"Mermaid",engine:"Godot 4",players:"2-player local co-op",ending:"Restore balance",scope:"Tiny vertical slice"},
+    decisions:D.map(d=>{
+      const a = answers[d.id]||{};
+      const o = {id:d.id, section:SECTIONS[d.s], question:d.t, who_decides:d.who, answered:isAnswered(d)};
+      if(d.type==="text") o.answer = a.fields||{};
+      else { o.answer_values = d.type==="many" ? (a.choice||[]) : (a.choice||null);
+             o.answer_labels = d.type==="many" ? (a.choice||[]).map(v=>labelFor(d,v)) : (a.choice?labelFor(d,a.choice):null);
+             o.claude_suggested = d.opts.filter(x=>x.rec).map(x=>x.v); }
+      if(a.other) o.other = a.other;
+      if(a.note) o.note = a.note;
+      if(a.by) o.answered_by = a.by;
+      if(a.at) o.updated_at = a.at;
+      return o;
+    })
+  };
+}
+const exportJSON = ()=>JSON.stringify(exportObj(),null,2);
+
+/* persistence */
+const pending = {};
+function commit(id, immediate){
+  answers[id].by = who; answers[id].at = new Date().toISOString(); if(uid) answers[id].uid = uid;
+  lsSet(LS_KEY, JSON.stringify(answers));
+  const d = D.find(x=>x.id===id); syncCard(d); syncSummary();
+  if(!db) return;
+  clearTimeout(pending[id]);
+  pending[id] = setTimeout(()=>{
+    const data = JSON.parse(JSON.stringify(answers[id]));
+    db.collection("answers").doc(id).set(data).catch(e=>{
+      setStatus(e && e.code==="permission_denied" ? "You can view, but not save for everyone" : "Couldn't save online, kept on this device", false);
+    });
+  }, immediate?0:700);
+}
+
+function setStatus(txt, live){ const s=$("#saveStatus"); s.textContent=txt; s.classList.toggle("live",!!live) }
+
+document.addEventListener("click", e=>{
+  const b = e.target.closest(".opt"); if(!b) return;
+  const card = b.closest(".dcard"); const d = D.find(x=>x.id===card.dataset.id);
+  const a = answers[d.id] = answers[d.id] || {};
+  if(d.type==="many"){ const set = new Set(a.choice||[]); set.has(b.dataset.v)?set.delete(b.dataset.v):set.add(b.dataset.v); a.choice=[...set]; }
+  else a.choice = a.choice===b.dataset.v ? null : b.dataset.v;
+  commit(d.id, true);
+});
+document.addEventListener("input", e=>{
+  const card = e.target.closest(".dcard"); if(!card) return;
+  const d = D.find(x=>x.id===card.dataset.id);
+  const a = answers[d.id] = answers[d.id] || {};
+  if(e.target.matches("[data-note]")) a.note = e.target.value;
+  else if(e.target.matches("[data-other]")) a.other = e.target.value;
+  else if(e.target.matches("[data-field]")){ a.fields = a.fields||{}; a.fields[e.target.dataset.field] = e.target.value; }
+  else return;
+  commit(d.id, false);
+});
+
+/* who toggle */
+function syncWho(){ document.querySelectorAll(".who-row [data-who]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.who===who?"true":"false")) }
+document.querySelectorAll(".who-row [data-who]").forEach(b=>b.addEventListener("click",()=>{ who=b.dataset.who; lsSet(LS_WHO,who); syncWho(); }));
+
+/* toast */
+let toastT;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2600) }
+
+/* export / import */
+$("#btnShow").addEventListener("click",()=>{ const p=$("#jsonOut"); p.hidden=!p.hidden; if(!p.hidden) p.textContent=exportJSON(); $("#btnShow").textContent=p.hidden?"Show JSON":"Hide JSON"; });
+$("#btnCopy").addEventListener("click",()=>{
+  const txt = exportJSON();
+  const fallback = ()=>{ const p=$("#jsonOut"); p.hidden=false; p.textContent=txt; $("#btnShow").textContent="Hide JSON";
+    const r=document.createRange(); r.selectNodeContents(p); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected. Press Ctrl+C to copy"); };
+  try{ navigator.clipboard.writeText(txt).then(()=>toast("JSON copied"), fallback) }catch(e){ fallback() }
+});
+let downloads = null;
+$("#btnSave").addEventListener("click", async ()=>{
+  const name = `tenshi-gdd-answers-${new Date().toISOString().slice(0,10)}.json`;
+  const data = exportJSON();
+  // Opened as a local file or a normal web page: a plain browser download to the Downloads folder.
+  const fileDownload = ()=>{
+    const url = URL.createObjectURL(new Blob([data],{type:"application/json"}));
+    const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    toast("Downloading "+name);
+  };
+  // Inside claude.ai the page can't start downloads itself, so it asks the viewer through the downloads capability.
+  if(!downloads){ fileDownload(); return; }
+  try{ await downloads.save({filename:name, data}); toast("Saved "+name) }
+  catch(e){ if(e && e.code==="declined") toast("Save cancelled"); else fileDownload(); }
+});
+$("#fileLoad").addEventListener("change", e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const obj = JSON.parse(r.result); let n=0;
+      for(const x of obj.decisions||[]){
+        const d = D.find(dd=>dd.id===x.id); if(!d || !x.answered && !x.note && !x.other) continue;
+        const a = {};
+        if(d.type==="text") a.fields = x.answer||{}; else a.choice = x.answer_values ?? (d.type==="many"?[]:null);
+        if(x.other) a.other=x.other; if(x.note) a.note=x.note;
+        answers[d.id]=a; commit(d.id,true); syncCard(d,true); n++;
+      }
+      toast(`Loaded ${n} answers`);
+    }catch(err){ toast("That file isn't a Tenshi answers file") }
+    e.target.value="";
+  };
+  r.readAsText(f);
+});
+
+renderAll();
+
+/* runtime capabilities (light up when available) */
+(async()=>{
+  const C = window.claude; if(!C || !C.use){ document.querySelectorAll("[data-comment]").forEach(b=>b.hidden=true); return; }
+  C.use("downloads").then(x=>{ downloads=x }).catch(()=>{});
+  C.use("comments").then(cm=>{
+    if(!cm) { document.querySelectorAll("[data-comment]").forEach(b=>b.hidden=true); return; }
+    document.querySelectorAll("[data-comment]").forEach(b=>b.addEventListener("click",()=>{
+      cm.openComposer({element:b.closest("section")}).catch(()=>{});
+    }));
+  }).catch(()=>{});
+  try{
+    const user = await C.use("user"); if(user && user.id) uid = await user.id();
+  }catch(e){}
+  try{
+    db = await C.use("db");
+    if(!db){ setStatus("Saving on this device", false); return; }
+    let first = true;
+    const timer = setTimeout(()=>{ if(first) setStatus("Still connecting… saved on this device for now", false) }, 10000);
+    db.collection("answers").onSnapshot(snap=>{
+      clearTimeout(timer);
+      const localOnly = first ? {...answers} : null;
+      snap.docChanges().forEach(ch=>{
+        if(ch.type==="removed"){ delete answers[ch.doc.id]; }
+        else { const v = ch.doc.data(); if(v) answers[ch.doc.id]=v; }
+        const d = D.find(x=>x.id===ch.doc.id); if(d) syncCard(d);
+      });
+      if(first){
+        first = false;
+        // push answers made on this device before going live, if the shared copy has none
+        const remote = new Set(snap.docs.map(x=>x.id));
+        for(const id of Object.keys(localOnly)) if(!remote.has(id) && D.find(x=>x.id===id)){ answers[id]=localOnly[id]; db.collection("answers").doc(id).set(localOnly[id]).catch(()=>{}); }
+      }
+      lsSet(LS_KEY, JSON.stringify(answers));
+      syncSummary(); dbLive = true;
+      setStatus("Saved for everyone · Claude can read it", true);
+    }, err=>{ clearTimeout(timer); setStatus("Saving on this device", false); });
+  }catch(e){ setStatus("Saving on this device", false) }
+})();
+</script>
