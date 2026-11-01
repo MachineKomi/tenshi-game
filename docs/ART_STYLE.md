@@ -1,6 +1,6 @@
 # Tenshi Game: Art Style Spec
 
-**Status:** DECIDED by Amelia + parent on 2026-10-31 (GDD Part 0). The §8 prompt block was tested on 2026-10-31 with a **blend test** (3 blend dials x 3 game scenes, `docs/gdd/art/blend/`). Waiting for the humans to vote in the GDD (`style_blend`).
+**Status:** DECIDED by Amelia + parent. Finish chosen 2026-10-31; blend dial chosen 2026-11-01 (**Blend 3, chunky with rich gloss**). The §8 block below includes it.
 **Decision record:** `decisions/DECISIONS.md` and `decisions/answers/2026-10-31_gdd-answers.json`
 **Owner:** humans approve, agents follow
 
@@ -22,8 +22,11 @@
 | Outlines | **Medium hand-inked lines** in coloured or plum ink, heavier on the outer silhouette and lighter inside |
 | Proportions | **Cute but a bit taller**, about 4 heads tall |
 | Sprites | **Same style, simplified** for small sizes (fewer details, same lines, palette and shine rules) |
+| Blend dial (2026-11-01) | **Blend 3, chunky with rich gloss**: soft smooth shading, glossy toy-like hair, plenty of glow and glitter, still with the chunky shapes and medium inked outlines |
 
 Why the humans chose this: style C is easier to keep consistent, especially for detailed VN cut scenes and CGs. Style A adds the juicy, premium feel.
+
+Blend vote (2026-11-01): Amelia chose Blend 3 "because it's the shiniest". Her parent preferred Blend 1, because clear outlines make AI art more readable and consistent. **So the outlines are not negotiable:** every image keeps clear medium plum outlines around each character and object, even with all the gloss, and sprites can lean a little toward Blend 1 if they get muddy at small size.
 
 **Reference images** (in `docs/gdd/art/`):
 - `style-c-cel.webp`: the base for shapes, outlines and readability.
@@ -44,7 +47,7 @@ Why the humans chose this: style C is easier to keep consistent, especially for 
 - **Base rendering:** bold cel shading. Clean flat fills, one crisp shadow tone, and an occasional second shadow for depth. Shapes are simple and sticker-readable.
 - **Polish layer:** smooth gradient light on top of the cel base. Crisp, glossy specular highlights on hair, eyes, lips, jewellery and rounded forms, plus a soft rim light. Polished, never airbrushed mush.
 - **Shine tier 1, always glossy:** eyes, halos, the Mermaid's tail and fins, water, every spell and magic effect, buttons, rewards, and anything the player must notice (goals, keys, the fort banner).
-- **Shine tier 2, soft sheen only:** hair, gold trim, polished marble.
+- **Shine tier 2, glossy sheen:** hair (glossy, toy-like ribbon highlights), gold trim, polished marble.
 - **Shine tier 3, matte:** skin (soft blush only), cloth, plain stone, background foliage.
 - **Jelly / slime:** translucent with coloured light passing through, bubbles and glitter inside, and a wet highlight on top.
 - **Liquid glass:** clear and refractive, with a thin rainbow film only on edges and rims. Never a thick rainbow band.
@@ -56,6 +59,7 @@ Why the humans chose this: style C is easier to keep consistent, especially for 
 - Big, sparkly, glossy anime eyes and expressive faces.
 - Medium hand-inked outlines that make a clear silhouette against busy backgrounds.
 - Each hero, creature and faction owns one identity colour, used everywhere they appear.
+- **Angel outfits (2026-11-01):** magical-girl sparkle: pastel outfits, ribbons, a transformation pose. The boy angel gets a matching magical-boy version (same ribbons and pastel colours, shorts or tunic). Halos and small wings stay.
 - Readable at sprite size. Sprites keep the same style with fewer details.
 - Child-friendly: no scary, gory or suggestive content. Demons look silly, not frightening.
 - Original characters only, with no franchise likeness (for example, avoid a red-haired mermaid with a green tail).
@@ -79,19 +83,22 @@ Use the `vn-gel-glass` rules: **glass** for information and panels, **jelly** fo
 
 ## 8. Prompt style block
 
-Start every image prompt with this exact block, and change only the subject after it. Status: drafted from the humans' answers, waiting for one test image and human approval.
+Start every image prompt with this exact block, and change only the subject after it. Status: approved by the humans' Blend 3 vote, 2026-11-01.
 
 ```
-Tenshi Game house style: bold, chunky, cute anime game art with a smooth, juicy, polished finish. Characters about 4 heads tall with
-rounded chunky shapes, big sparkly glossy anime eyes and expressive happy faces. Medium hand-inked outlines in dark plum and local
-colour (heavier on the outer silhouette, lighter inside), never pure black. Bold cel shading with clean flat fills and one crisp
-shadow tone, finished with smooth gradient light, crisp glossy specular highlights and a soft rim light. Strongest gel, jelly,
-liquid-glass and thin holographic-film shine only on eyes, halos, water, magic effects and the most important objects; hair and
-gold get a soft sheen; skin, cloth and plain stone stay matte and clean. No paper, pencil or brush texture. Pastel prism rainbow
-palette (bubblegum pink #FF8FC0, peach #FFB27A, lemon #FFE27A, mint #9BEFC9, baby blue #9CDEFF, lilac #C9B4FF) with saturated
-jelly accents (#FF4FA0, #FF8A2B, #3DB8FF, #9E6BFF). Bright, readable, low clutter, child-friendly. Original characters, no
-franchise likeness. No text, letters, logos or watermark.
+Tenshi Game house style: bold, chunky, cute anime game art with a smooth, juicy, richly glossy finish. Characters about 4 heads
+tall with rounded chunky shapes, big sparkly glossy anime eyes and expressive happy faces. Clear medium hand-inked outlines in dark
+plum and local colour around every character and object (heavier on the outer silhouette, lighter inside), never pure black, never
+lost under the shine. Soft, smooth shading with gentle gradients over a clean cel base, glossy vinyl-toy-like sheen on hair and
+rounded forms, wet candy highlights, a soft rim light and gentle bloom. Lots of jelly, glitter, liquid-glass and thin
+holographic-film shine on eyes, halos, water, magic effects and the most important objects; skin stays matte with soft blush;
+cloth and plain stone stay clean. No paper, pencil or brush texture. Pastel prism rainbow palette (bubblegum pink #FF8FC0, peach
+#FFB27A, lemon #FFE27A, mint #9BEFC9, baby blue #9CDEFF, lilac #C9B4FF) with saturated jelly accents (#FF4FA0, #FF8A2B, #3DB8FF,
+#9E6BFF). Bright, readable, low clutter, child-friendly, modest outfits (the Mermaid wears a covered swim top, statues are clothed).
+Original characters, no franchise likeness. No text, letters, logos or watermark.
 ```
+
+**For sprites,** add: "Simplified small game sprite: fewer details, same outlines, palette and shine; keep the silhouette crisp and readable."
 
 ## 9. Blend test (2026-10-31)
 
@@ -103,4 +110,4 @@ Same house block, plus one "blend dial" line, drawn in three game moments (story
 | Blend 2 · Even mix | The block as written: cel base plus soft light, candy shine on hair and eyes |
 | Blend 3 · Chunky with rich gloss | Softer shading, glossy toy-like hair, lots of glow and glitter |
 
-When the humans vote, fold the winning dial line into the §8 block and delete the others.
+**Result (2026-11-01): Blend 3 won.** Its dial line is now part of the §8 block. Blends 1 and 2 stay in the repo as reference only.

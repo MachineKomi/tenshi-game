@@ -1,0 +1,440 @@
+{
+  "project": "Tenshi Game",
+  "document": "GDD v0.3 draft",
+  "exported_at": "2026-11-01T20:08:40.403Z",
+  "answered": 17,
+  "total": 31,
+  "locked": {
+    "world": "Ancient Rome",
+    "creature": "Mermaid",
+    "engine": "Godot 4",
+    "players": "2-player local co-op",
+    "ending": "Restore balance",
+    "scope": "Tiny vertical slice"
+  },
+  "decisions": [
+    {
+      "id": "style_blend",
+      "section": "Art style",
+      "question": "Blend test: which mix of A and C is best?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "blend3_gloss",
+      "answer_labels": "Blend 3 · Chunky with rich gloss",
+      "claude_suggested": [
+        "blend2_even"
+      ],
+      "other": "Daddy liked blend 1 because he thinks the outline makes for readable and more consistent AI artwork - Ame prefers blend 3 \"because its the shiniest - I just love it because its shiny\".",
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:41:33.314Z"
+    },
+    {
+      "id": "art_style",
+      "section": "Art style",
+      "question": "Which finish should the whole game use?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "A_gloss",
+      "answer_labels": "A · Juicy gloss",
+      "claude_suggested": [
+        "B_handmade_gloss"
+      ],
+      "other": "this box has a max character limit which is annoying...",
+      "note": "Answer from human parent & Amelia: we really like both A and C - the juicy gloss look and the bold and chunky look - we think that the bold chunky look will be easier to nail consistently - especially getting details right in terms of VN cut scenes or CGs etc. So I think what we really want is some blending/combination/middle point between A and C here - so the bold chunky design BUT with some more smooth polished and shiny texture / gloss.",
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:02:01.486Z"
+    },
+    {
+      "id": "shine_amount",
+      "section": "Art style",
+      "question": "Where does the gel and glass shine go?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "magic_focus",
+      "answer_labels": "On magic things",
+      "claude_suggested": [
+        "magic_focus"
+      ],
+      "note": "and on anything non-magical but super important or to highlight. ",
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:02:42.856Z"
+    },
+    {
+      "id": "texture",
+      "section": "Art style",
+      "question": "How much hand-made texture?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "none",
+      "answer_labels": "None, smooth digital",
+      "claude_suggested": [
+        "light_grain"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:03:22.282Z"
+    },
+    {
+      "id": "outline",
+      "section": "Art style",
+      "question": "What kind of outlines?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": "medium_inked",
+      "answer_labels": "Medium hand-inked lines",
+      "claude_suggested": [
+        "medium_inked"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:03:35.314Z"
+    },
+    {
+      "id": "proportions",
+      "section": "Art style",
+      "question": "How chunky are the characters?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": "cute_4",
+      "answer_labels": "Cute but a bit taller",
+      "claude_suggested": [
+        "chibi_2_3"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:04:05.784Z"
+    },
+    {
+      "id": "sprite_match",
+      "section": "Art style",
+      "question": "How closely do in-game sprites match the illustrations?",
+      "who_decides": "Parent",
+      "answered": true,
+      "answer_values": "same_simplified",
+      "answer_labels": "Same style, simplified",
+      "claude_suggested": [
+        "same_simplified"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-10-31T20:04:48.717Z"
+    },
+    {
+      "id": "demon_fate",
+      "section": "Story",
+      "question": "What happens to a demon when the angels win?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": "become_friends",
+      "answer_labels": "Some become friends",
+      "claude_suggested": [
+        "go_home"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:42:47.333Z"
+    },
+    {
+      "id": "goddess_role",
+      "section": "Story",
+      "question": "How much do we see the goddess in the first slice?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "intro_card",
+      "answer_labels": "One picture at the start",
+      "claude_suggested": [
+        "intro_card"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:43:01.389Z"
+    },
+    {
+      "id": "angel_names",
+      "section": "Heroes",
+      "question": "What are the angels called?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer": {
+        "girl": "Serena (セレナ)",
+        "boy": "Sora (天)"
+      },
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:44:54.581Z"
+    },
+    {
+      "id": "angel_outfit",
+      "section": "Heroes",
+      "question": "What should the angels wear?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": "magical_girl",
+      "answer_labels": "Magical girl sparkle",
+      "claude_suggested": [
+        "classic"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:45:33.615Z"
+    },
+    {
+      "id": "controls",
+      "section": "Heroes",
+      "question": "How will two people play on one PC?",
+      "who_decides": "Parent",
+      "answered": true,
+      "answer_values": "both",
+      "answer_labels": "Support both",
+      "claude_suggested": [
+        "both"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:45:43.183Z"
+    },
+    {
+      "id": "slice_length",
+      "section": "Loop",
+      "question": "How long should one play of the slice take?",
+      "who_decides": "Parent",
+      "answered": true,
+      "answer_values": "5to8",
+      "answer_labels": "5 to 8 minutes",
+      "claude_suggested": [
+        "3min"
+      ],
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:54:26.486Z"
+    },
+    {
+      "id": "fail_rule",
+      "section": "Loop",
+      "question": "What happens if you mess up?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "never_fail"
+      ],
+      "other": "platforming you always just get set back a little ways - you can restore from your companions location so long as one of you survives OR if you both die / KO then you are reset to frequent checkpoints - for the rhythm game you can't \"fail\" but the power up and other benefits is based on how well you perform at the rhythm game. For the avarice 3 style battle / vampire survivors style auto battle with generals - you CAN fail but there is no penalty for failure other than you have to try again and it encourages you to try again and suggests what you can do to make it easier next time (rescue more creatures or power them up more through more dancing). ",
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T19:57:48.216Z"
+    },
+    {
+      "id": "rome_features",
+      "section": "Rome",
+      "question": "What should the Rome level have?",
+      "who_decides": "Amelia",
+      "answered": true,
+      "answer_values": [
+        "columns",
+        "fountain",
+        "banners",
+        "sunny_sky",
+        "temple",
+        "arches"
+      ],
+      "answer_labels": [
+        "Big marble columns",
+        "A fountain",
+        "Red banners",
+        "A sunny sky",
+        "A little temple",
+        "Arches and an aqueduct"
+      ],
+      "claude_suggested": [
+        "columns",
+        "fountain",
+        "sunny_sky"
+      ],
+      "other": "Amelia: some rainbows; some cute little monsters but they're good - and they're with the little mermaid. ",
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T20:02:27.851Z"
+    },
+    {
+      "id": "camera",
+      "section": "Rome",
+      "question": "How does the camera handle two players?",
+      "who_decides": "Parent",
+      "answered": true,
+      "answer_values": "shared_zoom",
+      "answer_labels": "One shared screen that zooms",
+      "claude_suggested": [
+        "shared_zoom"
+      ],
+      "note": "zoom up to a limit - beyond that initially we can just stop players moving further apart, ideally eventually it would be shared screen - until you are too far apart then it splits off into split screen and then merges back into shared screen again when close enough together again - this is the best compromise I've seen done for this kind of co-op game.",
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T20:06:09.455Z"
+    },
+    {
+      "id": "history",
+      "section": "Rome",
+      "question": "How much real Roman history goes in?",
+      "who_decides": "Both",
+      "answered": true,
+      "answer_values": "fact_card",
+      "answer_labels": "One fun fact card at the end",
+      "claude_suggested": [
+        "fact_card"
+      ],
+      "note": "both fun fact card - and Latin words on signs, and then also a little history card or something that gets added to your history book or something where you can read and learn more about history - reading these things maybe also then powers up your creatures or something so it rewards learning. ",
+      "answered_by": "Amelia",
+      "updated_at": "2026-11-01T20:07:46.048Z"
+    },
+    {
+      "id": "mermaid_personality",
+      "section": "Mermaid",
+      "question": "What should the Mermaid be like?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": []
+    },
+    {
+      "id": "mermaid_colour",
+      "section": "Mermaid",
+      "question": "What colour should she feel most like?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": []
+    },
+    {
+      "id": "mermaid_name",
+      "section": "Mermaid",
+      "question": "What is her name?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": []
+    },
+    {
+      "id": "recruit_how",
+      "section": "Mermaid",
+      "question": "How do the angels make friends with her?",
+      "who_decides": "Both",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "lost_shell"
+      ]
+    },
+    {
+      "id": "dance_feel",
+      "section": "Dance",
+      "question": "What should the dance feel like?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "bouncy"
+      ]
+    },
+    {
+      "id": "note_style",
+      "section": "Dance",
+      "question": "How do you know when to press?",
+      "who_decides": "Both",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "falling_stars"
+      ]
+    },
+    {
+      "id": "miss_note",
+      "section": "Dance",
+      "question": "What happens if you miss a beat?",
+      "who_decides": "Both",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "nothing"
+      ]
+    },
+    {
+      "id": "upgrade_look",
+      "section": "Dance",
+      "question": "How does she look after she powers up?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "transform"
+      ]
+    },
+    {
+      "id": "music_source",
+      "section": "Dance",
+      "question": "Where does the song come from?",
+      "who_decides": "Parent",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "simple_made"
+      ]
+    },
+    {
+      "id": "battle_style",
+      "section": "Battle",
+      "question": "How does the battle play?",
+      "who_decides": "Both",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "realtime"
+      ]
+    },
+    {
+      "id": "enemy_look",
+      "section": "Battle",
+      "question": "What do the demons look like?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "imps"
+      ]
+    },
+    {
+      "id": "fort_reclaim",
+      "section": "Battle",
+      "question": "How do we show the fort is ours again?",
+      "who_decides": "Amelia",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "glow_cheer"
+      ]
+    },
+    {
+      "id": "art_pipeline",
+      "section": "Making it",
+      "question": "How do we make the game art?",
+      "who_decides": "Parent",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "shapes_first"
+      ]
+    },
+    {
+      "id": "review_style",
+      "section": "Making it",
+      "question": "How should Amelia review each stop?",
+      "who_decides": "Both",
+      "answered": false,
+      "answer_values": null,
+      "answer_labels": null,
+      "claude_suggested": [
+        "page_like_this"
+      ]
+    }
+  ]
+}
